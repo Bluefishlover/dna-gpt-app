@@ -1,0 +1,3 @@
+rsid,gene,drug,phenotype,clinical_annotation,evidence_level
+rs123,BRCA1,Tamoxifen,Reduced efficacy,Consider alternate therapy,1A
+rs321,CYP2C19,Clopidogrel,Poor metabolizer,Use alternate drug,2B

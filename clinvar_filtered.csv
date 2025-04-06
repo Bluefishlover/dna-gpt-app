@@ -1,0 +1,4 @@
+rsid,gene,condition,clinical_significance,review_status,origin,last_evaluated
+rs123,BRCA1,Breast cancer,Pathogenic,"criteria provided, multiple submitters, no conflicts",germline,2023-05-10
+rs456,CFTR,Cystic fibrosis,Likely pathogenic,"criteria provided, multiple submitters, no conflicts",germline,2022-11-15
+rs789,HLA-DQA1,Celiac disease,Conflicting,"criteria provided, multiple submitters, no conflicts",germline,2023-02-01
