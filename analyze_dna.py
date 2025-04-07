@@ -45,10 +45,11 @@ if uploaded_file:
     parsed = [line.split("\t") for line in data if len(line.split("\t")) == 4]
     user_df = pd.DataFrame(parsed, columns=["rsid", "chromosome", "position", "genotype"])
 
-    tabs = st.tabs([
+    tab_labels = [
         "🧠 Traits", "💊 Pharmacogenomics", "🥗 Nutrigenomics", "🌍 Ancestry",
         "🧬 ClinVar Conditions", "💊 Drug Sensitivities", "🛡️ Immune Gene Matches", "📝 Summary Report"
-    ])
+    ]
+    tabs = st.tabs(tab_labels)
     dbs = [trait_db, pharma_db, nutri_db, ancestry_db, clinvar_db, pharmgkb_db, immune_db]
 
     match_data = []
@@ -56,9 +57,11 @@ if uploaded_file:
     for i, db in enumerate(dbs):
         with tabs[i]:
             merged = pd.merge(user_df, db, on="rsid")
+            match_count = len(merged)
+            st.write(f"✅ {match_count} SNPs matched in this category.")
             if not merged.empty:
                 st.dataframe(merged)
-                match_data.append((tabs[i], merged))
+                match_data.append((tab_labels[i], merged))
                 selected = st.selectbox("Select a SNP for GPT explanation:", merged["rsid"].unique(), key=f"sel_{i}")
                 row = merged[merged["rsid"] == selected].iloc[0]
                 if st.button("🧠 Explain with GPT", key=f"explain_{i}"):
@@ -71,10 +74,11 @@ if uploaded_file:
         st.subheader("📝 One-Click Summary Report")
         if st.button("📄 Generate Summary"):
             summary = ""
-            for label, df in match_data:
-                summary += f"\n### {label.title()}\n"
+            for label_text, df in match_data:
+                summary += f"\n### {label_text}\n"
                 for _, row in df.iterrows():
-                    summary += f"- {row['rsid']} ({row['gene']}): {row.get('trait') or row.get('condition') or row.get('drug') or row.get('region') or row.get('phenotype')}\n"
+                    item = row.get('trait') or row.get('condition') or row.get('drug') or row.get('region') or row.get('phenotype') or ''
+                    summary += f"- {row['rsid']} ({row['gene']}): {item}\n"
             st.text_area("Your Genetic Summary:", summary.strip(), height=300)
             st.download_button("📥 Download Summary", summary.strip(), file_name="dna_summary.txt")
 
