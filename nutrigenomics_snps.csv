@@ -1,3 +1,15 @@
-rsid,gene,nutrient
-rs678,MTHFR,Folate metabolism
-rs890,FUT2,Vitamin B12 absorption
+rsid,gene,nutrient,impact
+rs1801133,MTHFR,Folate (B9),Reduced enzyme activity = lower folate conversion
+rs602662,FUT2,Vitamin B12,G allele = lower B12 absorption
+rs1801198,TCN2,Vitamin B12,May reduce transport of B12 to cells
+rs4588,GC,Vitamin D,A allele = lower vitamin D binding protein
+rs10741657,CYP2R1,Vitamin D,G allele = lower vitamin D synthesis
+rs1800562,HFE,Iron,Risk for iron overload (hemochromatosis)
+rs1799945,HFE,Iron,Milder risk allele for iron overload
+rs174537,FADS1,Omega-3,G allele = reduced EPA/DHA synthesis
+rs174575,FADS2,Omega-3,Reduced desaturase activity
+rs2187668,HLA-DQA1,Gluten,Associated with celiac disease (DQ2 haplotype)
+rs7454108,HLA-DQB1,Gluten,Associated with celiac disease (DQ8 haplotype)
+rs1229984,ADH1B,Alcohol,A allele = faster alcohol metabolism
+rs671,ALDH2,Alcohol,A allele = impaired acetaldehyde breakdown
+rs4343,ACE,Salt sensitivity,D allele = increased BP response to salt

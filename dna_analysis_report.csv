@@ -1,0 +1,10 @@
+rsid,chromosome,position,genotype,trait,gene,effect
+rs1801133,1,11796321,GG,Folate metabolism (MTHFR C677T),MTHFR,T/T = reduced enzyme activity
+rs4988235,2,135851076,GA,Lactose intolerance,MCM6,T/T = lactose tolerant
+rs1229984,4,99318162,TC,Alcohol flush reaction (ADH1B),ADH1B,A allele = fast alcohol metabolism
+rs1042713,5,148826877,GA,Asthma risk (ADRB2),ADRB2,Associated with drug response
+rs1695,11,67585218,GG,Detox efficiency (GSTP1),GSTP1,Val allele may reduce detox enzyme activity
+rs762551,15,74749576,AA,Caffeine metabolism (CYP1A2),CYP1A2,A/A = fast metabolizer
+rs429358,19,44908684,TT,Alzheimer's risk (APOE e4),APOE,Increased risk if e4 allele is present
+rs7412,19,44908822,CC,Alzheimer's risk (APOE e2/e3/e4),APOE,Protective or risk depending on combination
+rs602662,19,48703728,GG,Vitamin B12 levels (FUT2),FUT2,Influences B12 absorption
