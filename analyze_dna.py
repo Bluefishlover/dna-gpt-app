@@ -40,14 +40,27 @@ def explain_snp(row):
     except Exception as e:
         return f"❌ GPT Error: {e}"
 
+def ask_gpt(question):
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": question}],
+            temperature=0.7,
+            max_tokens=1000
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        return f"❌ GPT Error: {e}"
+
 if uploaded_file:
     data = [line.decode("utf-8").strip() for line in uploaded_file.readlines() if not line.decode("utf-8").startswith("#")]
     parsed = [line.split("\t") for line in data if len(line.split("\t")) == 4]
     user_df = pd.DataFrame(parsed, columns=["rsid", "chromosome", "position", "genotype"])
+    user_df['rsid'] = user_df['rsid'].str.strip().str.lower()
 
     tab_labels = [
         "🧠 Traits", "💊 Pharmacogenomics", "🥗 Nutrigenomics", "🌍 Ancestry",
-        "🧬 ClinVar Conditions", "💊 Drug Sensitivities", "🛡️ Immune Gene Matches", "📝 Summary Report"
+        "🧬 ClinVar Conditions", "💊 Drug Sensitivities", "🛡️ Immune Gene Matches", "📝 Summary Report", "💬 Ask GPT"
     ]
     tabs = st.tabs(tab_labels)
     dbs = [trait_db, pharma_db, nutri_db, ancestry_db, clinvar_db, pharmgkb_db, immune_db]
@@ -55,8 +68,9 @@ if uploaded_file:
     match_data = []
 
     for i, db in enumerate(dbs):
+        db['rsid'] = db['rsid'].astype(str).str.strip().str.lower()
         with tabs[i]:
-            merged = pd.merge(user_df, db, on="rsid")
+            merged = pd.merge(user_df, db, on="rsid", how="inner")
             match_count = len(merged)
             st.write(f"✅ {match_count} SNPs matched in this category.")
             if not merged.empty:
@@ -81,6 +95,16 @@ if uploaded_file:
                     summary += f"- {row['rsid']} ({row['gene']}): {item}\n"
             st.text_area("Your Genetic Summary:", summary.strip(), height=300)
             st.download_button("📥 Download Summary", summary.strip(), file_name="dna_summary.txt")
+
+    with tabs[8]:
+        st.subheader("💬 Ask GPT Anything")
+        question = st.text_input("Type your question about genetics, SNPs, or health:")
+        if st.button("Ask GPT"):
+            if question:
+                response = ask_gpt(question)
+                st.markdown(f"**GPT Response:** {response}")
+            else:
+                st.warning("Please enter a question before submitting.")
 
 else:
     st.info("👆 Upload your 23andMe raw DNA file to begin analysis.")
