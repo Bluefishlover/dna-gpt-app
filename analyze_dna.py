@@ -1,31 +1,30 @@
-# Streamlit DNA Analyzer v2 with OpenAI SDK v1.x and summary improvements
+# DNA App with CSVs loaded from Streamlit Secrets
 import streamlit as st
 import pandas as pd
+import io
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
 
+st.set_page_config(page_title="🧬 DNA Analyzer (Secrets)", layout="wide")
+st.title("🧬 DNA Analysis with Secured Data")
+
 load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
-st.set_page_config(page_title="🧬 DNA Analyzer v2", layout="wide")
-st.title("🧬 Enhanced DNA Analysis with GPT & Diagnostics")
-
-uploaded_file = st.file_uploader("📄 Upload your 23andMe raw DNA file (.txt)", type="txt")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY") or st.secrets["OPENAI_API_KEY"])
 
 @st.cache_data
-def load_csv(filename):
-    df = pd.read_csv(filename)
-    df['rsid'] = df['rsid'].astype(str).str.strip().str.lower()
-    return df
+def load_from_secret(key):
+    return pd.read_csv(io.StringIO(st.secrets[key]))
 
-trait_db = load_csv("snp_traits.csv")
-pharma_db = load_csv("pharma_snps.csv")
-nutri_db = load_csv("nutrigenomics_snps.csv")
-ancestry_db = load_csv("ancestry_snps.csv")
-clinvar_db = load_csv("clinvar_filtered.csv")
-pharmgkb_db = load_csv("pharmgkb_filtered.csv")
-immune_db = load_csv("innatedb_gene_matches.csv")
+trait_db = load_from_secret("TRAITS_CSV")
+pharma_db = load_from_secret("PHARMA_CSV")
+nutri_db = load_from_secret("NUTRI_CSV")
+ancestry_db = load_from_secret("ANCESTRY_CSV")
+clinvar_db = load_from_secret("CLINVAR_CSV")
+pharmgkb_db = load_from_secret("PHARMGKB_CSV")
+immune_db = load_from_secret("IMMUNE_CSV")
+
+uploaded_file = st.file_uploader("📄 Upload your 23andMe raw DNA file (.txt)", type="txt")
 
 def explain_snp(row):
     label = row.get("trait") or row.get("condition") or row.get("drug") or row.get("nutrient") or row.get("phenotype") or "a known variant"
@@ -61,7 +60,8 @@ if uploaded_file:
 
     tab_labels = [
         "🧠 Traits", "💊 Pharmacogenomics", "🥗 Nutrigenomics", "🌍 Ancestry",
-        "🧬 ClinVar Conditions", "💊 Drug Sensitivities", "🛡️ Immune Gene Matches", "📝 Summary Report", "💬 Ask GPT", "🧪 Diagnostics"
+        "🧬 ClinVar Conditions", "💊 Drug Sensitivities", "🛡️ Immune Gene Matches",
+        "📝 Summary Report", "💬 Ask GPT", "🧪 Diagnostics"
     ]
     tabs = st.tabs(tab_labels)
     dbs = [trait_db, pharma_db, nutri_db, ancestry_db, clinvar_db, pharmgkb_db, immune_db]
